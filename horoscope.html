@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Horoscope</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sunshiney&family=Outfit:wght@400;700&display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+        .header-text {
+            font-family: 'Sunshiney', cursive;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-black via-indigo-900 to-[#A6A6F2] text-white min-h-screen flex flex-col items-center justify-center px-6">
+
+    <!-- Back Home Button -->
+    <button onclick="goHome()" class="absolute top-4 right-4 bg-gray-100 text-black px-4 py-2 rounded-full text-sm">go back home</button>
+
+    <!-- Main Title -->
+    <h1 class="text-3xl sm:text-5xl font-bold mb-2">check your daily</h1>
+    <h2 class="text-5xl sm:text-6xl header-text mb-6">horoscope</h2>
+
+    <!-- Zodiac Selection -->
+    <button class="bg-gray-200 text-black px-6 py-3 rounded-lg text-lg">choose your zodiac</button>
+    <select id="zodiac-sign" class="bg-gray-300 text-black mt-2 px-4 py-2 rounded-lg">
+        <option value="" disabled selected>&lt;select your zodiac&gt;</option>
+        <option value="aries">Aries</option>
+        <option value="taurus">Taurus</option>
+        <option value="gemini">Gemini</option>
+        <option value="cancer">Cancer</option>
+        <option value="leo">Leo</option>
+        <option value="virgo">Virgo</option>
+        <option value="libra">Libra</option>
+        <option value="scorpio">Scorpio</option>
+        <option value="sagittarius">Sagittarius</option>
+        <option value="capricorn">Capricorn</option>
+        <option value="aquarius">Aquarius</option>
+        <option value="pisces">Pisces</option>
+    </select>
+
+    <!-- Horoscope Result -->
+    <div id="horoscope-result" class="mt-6 text-lg text-center max-w-2xl px-4"></div>
+
+    <!-- Fun Horoscope Description -->
+    <p class="mt-10 text-gray-300 max-w-3xl text-center leading-relaxed">
+        <br><br> Horoscopes are like that friend who swears they can predict the future… but only after you’ve already made 
+        all the questionable decisions. Like, "Oh, I see a big change coming for you—be careful with those tacos tonight, 
+        Gemini. Trust me."
+    </p>
+    <p class="mt-4 text-gray-300 max-w-3xl text-center leading-relaxed">
+        And don't get me started on the vague advice: "Today, be bold, but not too bold. You might face challenges, but also, 
+        you might not. Wear your lucky socks, but if you forget, it’s fine—just don’t lose your keys, Leo."
+    </p>
+
+    <script>
+        async function getHoroscope() {
+            const sign = document.getElementById('zodiac-sign').value;
+            if (!sign) {
+                document.getElementById('horoscope-result').innerText = "Please select a zodiac sign.";
+                return;
+            }
+    
+            const url = `http://localhost:3000/horoscope/${sign}`;
+    
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch horoscope.");
+                }
+                
+                const data = await response.json();
+                document.getElementById('horoscope-result').innerHTML = `
+                    <p class="text-xl mt-4">✨ ${data.horoscope} ✨</p>
+                `;
+            } catch (error) {
+                console.error("Error fetching horoscope:", error);
+                document.getElementById('horoscope-result').innerText = "Could not load horoscope.";
+            }
+        }
+    
+        document.getElementById("zodiac-sign").addEventListener("change", getHoroscope);
+    </script>
+    
+</body>
+</html>
